@@ -107,3 +107,14 @@ double sigmoid(double x) {
 	if (x < -500) x = -500;
 	return 1 / (1 + exp(-x));
 }
+double d_sigmoid(double x) {
+	double sig = sigmoid(x);
+	return sig * (1 - sig);
+}
+double softmax_den(std::vector<double> x, int len) {
+	double val = 0;
+	for (int i = 0; i < len; i++) {
+		val += exp(x[i]);
+	}
+	return val;
+}

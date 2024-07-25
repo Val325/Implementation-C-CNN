@@ -47,8 +47,7 @@ class MaxPool {
             }
         }
     }
-    void forward(std::vector<std::vector<std::vector<double>>> sig_layer){
-	    // MAX Pooling (max_pooling, max_layer)
+    std::vector<std::vector<std::vector<double>>> forward(std::vector<std::vector<std::vector<double>>> sig_layer){
 	    double cur_max = 0;
 	    int max_i = 0, max_j = 0;
 	    for (int filter_dim = 0; filter_dim < 5; filter_dim++) {
@@ -71,7 +70,7 @@ class MaxPool {
 			    }
 		    }
 	    }
-
+        return max_layer;
     }
 
     std::vector<std::vector<std::vector<double>>> backward(std::vector<double> perv_dense){
@@ -92,4 +91,4 @@ class MaxPool {
 	    }
         return dw_max;
     }
-}
+};
