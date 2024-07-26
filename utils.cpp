@@ -1,16 +1,16 @@
 #include "CImg.h"
 
 std::vector<std::vector<double>> numLabels = {
-    {1,0,0,0,0,0,0,0,0,0},
-    {0,1,0,0,0,0,0,0,0,0},
-    {0,0,1,0,0,0,0,0,0,0},
-    {0,0,0,1,0,0,0,0,0,0},
-    {0,0,0,0,1,0,0,0,0,0},
-    {0,0,0,0,0,1,0,0,0,0},
-    {0,0,0,0,0,0,1,0,0,0},
-    {0,0,0,0,0,0,0,1,0,0},
-    {0,0,0,0,0,0,0,0,1,0},
-    {0,0,0,0,0,0,0,0,0,1}
+    {1,0,0,0,0,0,0,0,0,0}, // 0
+    {0,1,0,0,0,0,0,0,0,0}, // 1
+    {0,0,1,0,0,0,0,0,0,0}, // 2
+    {0,0,0,1,0,0,0,0,0,0}, // 3
+    {0,0,0,0,1,0,0,0,0,0}, // 4
+    {0,0,0,0,0,1,0,0,0,0}, // 5
+    {0,0,0,0,0,0,1,0,0,0}, // 6
+    {0,0,0,0,0,0,0,1,0,0}, // 7
+    {0,0,0,0,0,0,0,0,1,0}, // 8
+    {0,0,0,0,0,0,0,0,0,1}  // 9
 };
 
 template <class T>
@@ -102,6 +102,34 @@ std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> lo
         return dataset; 
 }
 
+double MSEloss(std::vector<double> X, std::vector<double> Y){
+    int sizeOutput = X.size();
+    //std::cout << "\nsizeOutput: " << sizeOutput << std::endl;
+    //std::cout << "Y: " << Y << std::endl;
+
+    double sum = 0;
+    for (int i = 0; i < sizeOutput; i++) {
+        //std::cout << " ((double)Y - X[i]) * ((double)Y - X[i]): " <<  ((double)Y - X[i]) * ((double)Y - X[i]) << std::endl;
+        sum += (Y[i] - X[i]) * (Y[i] - X[i]);
+        //std::cout << "X[i]: " <<  X[i] << std::endl;
+
+        //std::cout << "sum: " << sum << " sizeOutput: " << sizeOutput << " (double)X[i] " << (double)X[i] << " Y: " << Y << std::endl;
+    }
+    sum = sum / 2*sizeOutput;
+    //std::cout << "sum after (sum / sizeOutput): " << sum << std::endl;
+    return sum;
+}
+std::vector<double> MSElossDerivative(std::vector<double> X, std::vector<double> Y){
+    int sizeOutput = X.size();
+    std::vector<double> output;
+    for (int i = 0; i < sizeOutput; i++) {
+       double deriv = ((Y[i] - (double)X[i])) / sizeOutput;
+       //std::cout << "deriv: " << deriv << " sizeOutput: " << sizeOutput << " (double)X[i] " << (double)X[i] << " Y: " << Y << std::endl;       
+       output.push_back(deriv);
+    }
+    return output;
+
+}
 double sigmoid(double x) {
 	if (x > 500) x = 500;
 	if (x < -500) x = -500;
