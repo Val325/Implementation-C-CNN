@@ -9,9 +9,12 @@ double dense_b2[10];
 double dense_sum2[10];
 double dense_softmax[10];
 */
+//2 * double(rand()) / RAND_MAX - 1;
+#include "config.h"
 
 class NeuralNetwork {       
     private:
+        double loss;
         //double conv_w[5][5][5];
         //double conv_b[5][28][28];
 
@@ -46,6 +49,7 @@ class NeuralNetwork {
 
     public:
     NeuralNetwork(){
+        loss = 0;
         initialise_weights();
     }
     void initialise_weights() {
@@ -82,24 +86,24 @@ class NeuralNetwork {
         for (int i = 0; i < 980; i++) {
             dense_w[i].resize(120);
 		    for (int j = 0; j < 120; j++) {
-			    dense_w[i][j] = 2 * double(rand()) / RAND_MAX - 1;
+			    dense_w[i][j] = 2 * double(rand()) / RAND_MAX - 1;;
 		    }
 	    }
         dense_b.resize(120);
 	    for (int i = 0; i < 120; i++) {
-		    dense_b[i] = 2 * double(rand()) / RAND_MAX - 1;
+		    dense_b[i] = 2 * double(rand()) / RAND_MAX - 1;;
 	    }
         
         dense_w2.resize(120);
 	    for (int i = 0; i < 120; i++) {
             dense_w2[i].resize(10);
 		    for (int j = 0; j < 10; j++) {
-			    dense_w2[i][j] = 2 * double(rand()) / RAND_MAX - 1;
+			    dense_w2[i][j] = 2 * double(rand()) / RAND_MAX - 1;;
 		    }
 	    }
         dense_b2.resize(10);
 	    for (int i = 0; i < 10; i++) {
-		    dense_b2[i] = 2 * double(rand()) / RAND_MAX - 1;
+		    dense_b2[i] = 2 * double(rand()) / RAND_MAX - 1;;
 	    }
     }
     std::vector<double> feedforward(std::vector<std::vector<std::vector<double>>> max_layer, std::vector<double> labelY){
@@ -139,6 +143,7 @@ class NeuralNetwork {
 		    dense_softmax[i] = exp(dense_sum2[i]) / den;
             //std::cout << "prob : " << dense_softmax[i] << " num: " << i << std::endl; 
 	    }
+        loss = MSEloss(dense_softmax, labelY);
         //std::cout << "loss: " << MSEloss(dense_softmax, labelY) << std::endl;
         return dense_softmax;
     }
@@ -189,5 +194,20 @@ class NeuralNetwork {
 
         //std::cout << "derivative: " << MSElossDerivative(X, Y) << std::endl;
         return delta2; 
+    }
+    void update_weights() {
+	    for (int i = 0; i < 120; i++) {
+		    dense_b[i] -= learningRate * db1[i];
+		    for (int j = 0; j < 10; j++) {
+			    dense_b2[j] -= learningRate * db2[j];
+			    dense_w2[i][j] -= learningRate * dw2[i][j];
+		    }
+		    for (int k = 0; k < 980; k++) {
+			    dense_w[k][i] -= learningRate * dw1[k][i];
+		    }
+	    }
+    }
+    double getLoss(){
+        return loss; 
     }
 };

@@ -76,11 +76,11 @@ std::vector<std::vector<double>> loadImage(std::string filepath){
     return NormalizeImage(Image, 1.0, min, max);
 }
 
-std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> loadDataset(){
+std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> loadDataset(int sizeByOneLabel){
         std::string path = "dataset/minst/train/";
         std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> dataset;
 
-        int size = 10;
+        int size = sizeByOneLabel;
         int iterSize = 0;
         for (int i = 0; i < numLabels.size(); i++){
             std::string pathLoad = path + std::to_string(i);  
@@ -110,7 +110,7 @@ double MSEloss(std::vector<double> X, std::vector<double> Y){
     double sum = 0;
     for (int i = 0; i < sizeOutput; i++) {
         //std::cout << " ((double)Y - X[i]) * ((double)Y - X[i]): " <<  ((double)Y - X[i]) * ((double)Y - X[i]) << std::endl;
-        sum += (Y[i] - X[i]) * (Y[i] - X[i]);
+        sum += (X[i] - Y[i]) * ((X[i] - Y[i]));
         //std::cout << "X[i]: " <<  X[i] << std::endl;
 
         //std::cout << "sum: " << sum << " sizeOutput: " << sizeOutput << " (double)X[i] " << (double)X[i] << " Y: " << Y << std::endl;
@@ -123,7 +123,7 @@ std::vector<double> MSElossDerivative(std::vector<double> X, std::vector<double>
     int sizeOutput = X.size();
     std::vector<double> output;
     for (int i = 0; i < sizeOutput; i++) {
-       double deriv = ((Y[i] - (double)X[i])) / sizeOutput;
+       double deriv = (((double)X[i] - Y[i])) / sizeOutput;
        //std::cout << "deriv: " << deriv << " sizeOutput: " << sizeOutput << " (double)X[i] " << (double)X[i] << " Y: " << Y << std::endl;       
        output.push_back(deriv);
     }

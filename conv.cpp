@@ -1,3 +1,5 @@
+#include "config.h"
+
 class Convolution {       
     private:
         int conv_number;
@@ -58,9 +60,9 @@ class Convolution {
 
 			    for (int k = 0; k < sizeW; k++) {
 				    if (j < 5 && k < 5) {
-					    conv_w[i][j][k] = 2 * double(rand()) / RAND_MAX - 1; // Random double value between -1 and 1
+					    conv_w[i][j][k] = 2 * double(rand()) / RAND_MAX - 1;; 
 				    }
-				    conv_b[i][j][k] = 2 * double(rand()) / RAND_MAX - 1; // Random double value between -1 and 1
+				    conv_b[i][j][k] = 2 * double(rand()) / RAND_MAX - 1;; 
 			    }
 		    }
 	    }
@@ -145,5 +147,19 @@ class Convolution {
 		    }
             //std::cout << "-------------------------------" << std::endl;
 	    } 
+    }
+    void update_weights() {
+	    for (int i = 0; i < 5; i++) {
+		    for (int k = 0; k < 5; k++) {
+			    for (int j = 0; j < 5; j++) {
+				    conv_w[i][k][j] -= learningRate * dw_conv[i][k][j];
+			    }
+		    }
+		    for (int l = 0; l < 28; l++) {
+			    for (int m = 0; m < 28; m++) {
+				    conv_b[i][l][m] -= learningRate * db_conv[i][l][m];
+			    }
+		    }
+	    }
     }
 };
