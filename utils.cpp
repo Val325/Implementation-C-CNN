@@ -80,12 +80,12 @@ std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> lo
         std::string path = "dataset/minst/train/";
         std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> dataset;
 
-        int size = sizeByOneLabel;
-        int iterSize = 0;
+        //int size = sizeByOneLabel;
+        //int iterSize = 0;
         for (int i = 0; i < numLabels.size(); i++){
             std::string pathLoad = path + std::to_string(i);  
             for (const auto & entry : std::filesystem::directory_iterator(pathLoad)){
-                if (iterSize >= size) break; 
+                //if (iterSize >= size) break; 
                 
                 //std::pair<std::vector<std::vector<int>>, std::vector<double>> data;
                 //data = std::make_pair(loadImage(entry.path().string()), numLabels[i]);
@@ -93,10 +93,10 @@ std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> lo
                 std::vector<std::vector<double>> image = loadImage(entry.path().string());
                 dataset.push_back(std::make_pair(image, numLabels[i]));
                 std::cout << "amount dataset load: " << dataset.size() << std::endl;
-                iterSize++;
+                //iterSize++;
 
             }
-            iterSize = 0;
+            //iterSize = 0;
         }
         std::cout << "amount dataset: " << dataset.size() << std::endl;
         return dataset; 

@@ -7,13 +7,14 @@ const double learningRate = 0.01;
 #include <bits/stdc++.h>
 #include <random>
 #include <vector>
+#include <algorithm>
 #include "utils.cpp"
 #include "neuralnetwork.cpp"
 #include "conv.cpp"
 #include "maxpool.cpp"
 
 int main(){
-    std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> data = loadDataset(100);
+    std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> data = loadDataset(500);
     //std::cout << " num: "<< data[0].second[0] << std::endl;
     const int epoch = 2000; 
     NeuralNetwork nn;
@@ -22,10 +23,11 @@ int main(){
     MaxPool maxPoolLayer;
     conv.init(5, 5, 28, 28);
     maxPoolLayer.init();
+    auto rng = std::default_random_engine {};
     //double lossNN = 0;
     for (int i = 0; i < epoch; i++){
         double lossTotal = 0;
-        for (int j = 0; j < data.size(); j++){
+        for (int j = 0; j < 300; j++){
             std::vector<std::vector<double>> image = data[j].first;
             
             std::vector<std::vector<std::vector<double>>> conv1 = conv.forward(image);
@@ -40,6 +42,7 @@ int main(){
             conv.update_weights();
             lossTotal += nn.getLoss();
         }
+        std::shuffle(std::begin(data), std::end(data), rng);
         std::cout << "----------------" << std::endl; 
         std::cout << "Epoch: " << i << std::endl;  
         std::cout << "Loss: " << lossTotal << std::endl;
