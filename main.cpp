@@ -14,7 +14,7 @@ const double learningRate = 0.01;
 #include "maxpool.cpp"
 
 int main(){
-    std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> data = loadDataset(500);
+    std::vector<std::pair<std::vector<std::vector<double>>, std::vector<double>>> data = loadDataset(300);
     //std::cout << " num: "<< data[0].second[0] << std::endl;
     const int epoch = 2000; 
     NeuralNetwork nn;
@@ -47,8 +47,36 @@ int main(){
         std::cout << "Epoch: " << i << std::endl;  
         std::cout << "Loss: " << lossTotal << std::endl;
 
-        
-        std::cout << "label 7: ";
+    	int val_len = 600;
+	    int cor = 0;
+
+        std::cout << "Start Testing." << std::endl;
+	    for (int j = 0; j < val_len; j++) {
+		    std::vector<std::vector<double>> image = data[j].first;
+            
+            std::vector<std::vector<std::vector<double>>> conv1 = conv.forward(image);
+            std::vector<std::vector<std::vector<double>>> maxPoll = maxPoolLayer.forward(conv1);
+            std::vector<double> pred = nn.feedforward(maxPoll, data[j].second);
+		    if (arg_max(pred) == arg_max(data[j].second)) cor++;
+	    }
+	    float accu = double(cor) / val_len;
+	    std::cout << "Accuracy: " << accu << std::endl;        
+
+    }
+
+    /*for (int i = 0; i < pred.size(); i++){
+        std::cout << "pred: " << pred[i] << std::endl;
+    }*/
+    
+    //for (int i = 0; i < dense_backprop.size(); i++){
+    //std::cout << "dense_backprop: " << dense_backprop.size() << std::endl;
+    //std::cout << "maxPool_backprop: " << maxPool_backprop.size() << std::endl;
+    //}
+    //std::cout << "loss: " <<  << std::endl;
+    //std::cout << "derivative: " << nn.backpropogation(nn.feedforward(maxPoll, numLabels[7]), numLabels[7]) << std::endl;
+}
+
+        /*std::cout << "label 7: ";
         std::vector<std::vector<double>> lablSeven = loadImage("dataset/minst/test/7/111.jpg");
         std::vector<std::vector<std::vector<double>>> conv1Seven = conv.forward(lablSeven);
         std::vector<std::vector<std::vector<double>>> maxPollSeven = maxPoolLayer.forward(conv1Seven);
@@ -67,17 +95,4 @@ int main(){
             //std::cout << "Epoch: " << i << std::endl;
             std::cout << j << ": " << predFour[j] << " |";
         }
-        std::cout << "\n"; 
-    }
-    
-    /*for (int i = 0; i < pred.size(); i++){
-        std::cout << "pred: " << pred[i] << std::endl;
-    }*/
-    
-    //for (int i = 0; i < dense_backprop.size(); i++){
-    //std::cout << "dense_backprop: " << dense_backprop.size() << std::endl;
-    //std::cout << "maxPool_backprop: " << maxPool_backprop.size() << std::endl;
-    //}
-    //std::cout << "loss: " <<  << std::endl;
-    //std::cout << "derivative: " << nn.backpropogation(nn.feedforward(maxPoll, numLabels[7]), numLabels[7]) << std::endl;
-}
+        std::cout << "\n"; */
